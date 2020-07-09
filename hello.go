@@ -10,4 +10,7 @@ func main() {
 		fmt.Println("你已经成年了")
 	}
 
+	list := []string {};
+	list =  append(list, "nihao", "world")
+	fmt.Println(fmt.Sprintf("%q", list))
 }
