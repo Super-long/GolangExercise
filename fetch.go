@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
 )
 
-func fetch(url string) (filename string, n int64, err error) {
+func fetch_(url string) (filename string, n int64, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", 0, err
@@ -34,10 +34,25 @@ func fetch(url string) (filename string, n int64, err error) {
 }
 
 func main(){
-	name, len, err := fetch("https://golang.org")
+/*	name, len, err := fetch_("http://127.0.0.1:8000")
 	if err != nil{
 		log.Print(err)
 		return
 	}
-	fmt.Println(name, len)
+	fmt.Println(name, len)*/
+	// 与fetchserver配套使用
+	// "http://127.0.0.1:8000/list"
+	// "http://127.0.0.1:8000/price?item=socks"
+	resp ,err := http.Get("http://127.0.0.1:8000/price?item=hat")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+		os.Exit(1)
+	}
+	b,err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil{
+		fmt.Fprintf(os.Stderr, "fetch reading  %v", err)
+		os.Exit(1)
+	}
+	fmt.Printf("%s", b)
 }
