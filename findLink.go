@@ -44,7 +44,6 @@ func Extract(url string) ([]string, error) {
 			}
 		}
 	}
-	fmt.Println("up")
 	forEachNode(doc, visitNode, nil)
 	return links, nil
 }
@@ -56,7 +55,6 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)){
 	}
 
 	for c:=n.FirstChild; c!= nil; c = c.NextSibling{
-		fmt.Println("lop")
 		forEachNode(c, pre, post)
 	}
 	if post != nil{
@@ -68,7 +66,6 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)){
 func crawl(url string) []string{
 	fmt.Println(url)
 	list, err := Extract(url)
-	fmt.Println("函数返回")
 	if err != nil{
 		log.Print(err)
 	}
@@ -79,12 +76,14 @@ func crawl(url string) []string{
 func breadthFirst(f func(item string) []string, worklist []string){
 	seen := make(map[string]bool)
 	for len(worklist) > 0{
+		fmt.Println(len(worklist))
 		items := worklist
 		worklist = nil
 		for _, item := range items{
 			if !seen[item]{
 				seen[item] = true
-				worklist = append(worklist, f(item)...)
+				worklist = append(worklist,
+					f(item)...)
 			}
 		}
 	}
