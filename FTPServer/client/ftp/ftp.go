@@ -98,7 +98,10 @@ func (ftpCon *FtpClient) WritePut(cmdid uint8, filePath string) error {
 	return nil
 }
 
+// get只有一个元素,第一个参数为服务端目标文件,取路径最末尾的文件名问客户端存储的文件名
 func (ftpCon *FtpClient) HandleGet(filePath string) error {
+	// 返回路径的最后一个元素
+	// 为空返回. 全部都是斜杠则返回'/'
 	fileName := path.Base(filePath)
 	f, err := os.Create(fileName)
 	if err != nil {

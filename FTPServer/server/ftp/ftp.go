@@ -20,7 +20,7 @@ var Commands = map[string]uint8{
 	"ls":    uint8(2),
 	"exit":  uint8(3),
 	"mkdir": uint8(4),
-	"put":   uint8(5),
+	"put":   uint8(5),	// 包含mkdir
 	"get":   uint8(6),
 }
 
@@ -31,13 +31,15 @@ var DefaultDir = map[string]string{
 }
 
 type userInfo struct {
-	name string
+	//name string
 	pwd  string
 	home string
 }
 
 var lock sync.Once // 初始化users一次
-var users []userInfo
+//var users []userInfo
+
+var users map[string]userInfo
 
 func Init() {
 	lock.Do(initUsers)
@@ -247,7 +249,7 @@ func initUsers() {
 		} else {
 			f.Close()
 		}
-		users = append(users, userInfo{userinfo[0], userinfo[1], home})
+		users[userinfo[0]] = userInfo{userinfo[1], home}
 	}
 }
 
@@ -257,11 +259,9 @@ func Validate(name string, pwd string) (pass bool, home string) {
 		return
 	}
 
-	// 搞成个哈希表更好
-	for _, info := range users {
-		if info.name == name && info.pwd == pwd {
-			return true, info.home
-		}
+	if info, ok := users[name]; ok{
+		return true, info.home
 	}
+
 	return
 }
