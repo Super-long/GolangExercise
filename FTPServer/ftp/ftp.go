@@ -42,6 +42,7 @@ func (ftpCon *FtpConn) Write(content []byte) error {
 
 // string转[]byte
 // 利用string本来的底层数组
+// go圣经 p268
 func Str2sbyte(s string) (b []byte) {
 	/*
 	string 的底层数组结构如下
@@ -55,6 +56,7 @@ func Str2sbyte(s string) (b []byte) {
 	unit8 *array
 	int len
 	int cap
+	}
 	*/
 	*(*string)(unsafe.Pointer(&b)) = s
 	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&b)) + 2*unsafe.Sizeof(&b))) = len(s)
